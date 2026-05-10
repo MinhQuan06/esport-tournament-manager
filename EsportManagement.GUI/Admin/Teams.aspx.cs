@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using EsportManagement.BLL;
@@ -10,7 +9,6 @@ public partial class Admin_Teams : Page
     public bool ShowModal { get; private set; }
     private readonly TeamBLL _bll = new TeamBLL();
     private readonly TournamentBLL _tourBll = new TournamentBLL();
-    private readonly AccountBLL _accBll = new AccountBLL();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -27,8 +25,6 @@ public partial class Admin_Teams : Page
         var tours = _tourBll.GetAll();
         ddlTour.DataSource = tours; ddlTour.DataBind();
         ddlTourEdit.DataSource = tours; ddlTourEdit.DataBind();
-        var managers = _accBll.GetAll().Where(a => a.HasRole("TeamManager")).ToList();
-        ddlManager.DataSource = managers; ddlManager.DataBind();
     }
 
     private void BindList()
@@ -45,18 +41,16 @@ public partial class Admin_Teams : Page
     {
         try
         {
-            int? mgr = null; int m;
-            if (int.TryParse(ddlManager.SelectedValue, out m) && m > 0) mgr = m;
             var t = new Team
             {
-                TournamentID     = int.Parse(ddlTourEdit.SelectedValue),
-                TeamName         = txtName.Text.Trim(),
-                ShortName        = txtShort.Text.Trim(),
-                Description      = txtDesc.Text.Trim(),
-                ManagerAccountID = mgr,
-                GameType         = ddlGameEdit.SelectedValue,
-                LogoColor        = ddlColor.SelectedValue,
-                IsActive         = true
+                TournamentID = int.Parse(ddlTourEdit.SelectedValue),
+                TeamName     = txtName.Text.Trim(),
+                ShortName    = txtShort.Text.Trim(),
+                Description  = txtDesc.Text.Trim(),
+                ManagerName  = txtManager.Text.Trim(),
+                GameType     = ddlGameEdit.SelectedValue,
+                LogoColor    = ddlColor.SelectedValue,
+                IsActive     = true
             };
             int id;
             if (int.TryParse(hfId.Value, out id) && id > 0)
@@ -78,9 +72,9 @@ public partial class Admin_Teams : Page
             try { ddlTourEdit.SelectedValue = t.TournamentID.ToString(); } catch { }
             txtName.Text = t.TeamName; txtShort.Text = t.ShortName;
             txtDesc.Text = t.Description;
+            txtManager.Text = t.ManagerName;
             try { ddlGameEdit.SelectedValue = t.GameType ?? "League of Legends"; } catch { }
             try { ddlColor.SelectedValue = t.LogoColor ?? "#3b82f6"; } catch { }
-            ddlManager.SelectedValue = t.ManagerAccountID.HasValue ? t.ManagerAccountID.Value.ToString() : "";
             litTitle.Text = "Sửa thông tin đội";
             ShowModal = true;
         }
@@ -93,8 +87,8 @@ public partial class Admin_Teams : Page
 
     private void Reset()
     {
-        hfId.Value = ""; txtName.Text = ""; txtShort.Text = ""; txtDesc.Text = "";
-        ddlManager.SelectedValue = "";
+        hfId.Value = ""; txtName.Text = ""; txtShort.Text = "";
+        txtDesc.Text = ""; txtManager.Text = "";
         litTitle.Text = "Thêm đội mới";
     }
 

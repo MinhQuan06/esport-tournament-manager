@@ -43,6 +43,9 @@
         <asp:HyperLink ID="lnkMatches" runat="server" CssClass="menu-item" Visible="false">
             <i class="bi bi-lightning-charge-fill"></i> Trận đấu
         </asp:HyperLink>
+        <asp:HyperLink ID="lnkJoinTournament" runat="server" CssClass="menu-item" Visible="false">
+            <i class="bi bi-flag-fill"></i> Đăng ký giải đấu
+        </asp:HyperLink>
     </div>
 
     <div class="sidebar-section">

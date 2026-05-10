@@ -37,17 +37,25 @@ public partial class SiteMaster : MasterPage
                 lnkRoles.NavigateUrl    = ResolveUrl("~/Admin/Roles.aspx");
             }
 
+            // Cho cả Admin và TeamManager thấy "Đăng ký giải đấu"
+            if (acc.HasRole("Admin") || acc.HasRole("TeamManager"))
+            {
+                lnkJoinTournament.Visible = true;
+                lnkJoinTournament.NavigateUrl = ResolveUrl("~/Manager/JoinTournament.aspx");
+            }
+
             string url = Request.Url.AbsolutePath.ToLower();
-            HighlightIfMatch(lnkDashboard,   url, "default.aspx");
-            HighlightIfMatch(lnkTournaments, url, "tournaments");
-            HighlightIfMatch(lnkTeams,       url, "teams", "myteams");
-            HighlightIfMatch(lnkPlayers,     url, "players", "myplayers");
-            HighlightIfMatch(lnkSchedule,    url, "schedule");
-            HighlightIfMatch(lnkMatches,     url, "matches", "results");
-            HighlightIfMatch(lnkRanking,     url, "ranking");
-            HighlightIfMatch(lnkStatistics,  url, "statistics");
-            HighlightIfMatch(lnkAccounts,    url, "accounts");
-            HighlightIfMatch(lnkRoles,       url, "roles");
+            HighlightIfMatch(lnkDashboard,       url, "default.aspx");
+            HighlightIfMatch(lnkTournaments,     url, "tournaments");
+            HighlightIfMatch(lnkTeams,           url, "teams", "myteams");
+            HighlightIfMatch(lnkPlayers,         url, "players", "myplayers");
+            HighlightIfMatch(lnkSchedule,        url, "schedule");
+            HighlightIfMatch(lnkMatches,         url, "matches", "results");
+            HighlightIfMatch(lnkJoinTournament,  url, "jointournament");
+            HighlightIfMatch(lnkRanking,         url, "ranking");
+            HighlightIfMatch(lnkStatistics,      url, "statistics");
+            HighlightIfMatch(lnkAccounts,        url, "accounts");
+            HighlightIfMatch(lnkRoles,           url, "roles");
         }
         else
         {
@@ -72,7 +80,6 @@ public partial class SiteMaster : MasterPage
     {
         Session.Clear();
         Session.Abandon();
-        
         Response.Redirect("~/Login.aspx");
     }
 }

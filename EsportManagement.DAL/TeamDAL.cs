@@ -8,94 +8,58 @@ namespace EsportManagement.DAL
 {
     public class TeamDAL
     {
+        private const string SELECT_BASE = @"
+            SELECT t.*, tour.TournamentName,
+                   COALESCE(t.ManagerName, a.FullName, '') AS DisplayManagerName,
+                   (SELECT COUNT(*) FROM Player WHERE TeamID = t.TeamID) AS PlayerCount,
+                   ISNULL(r.Wins, 0)   AS Wins,
+                   ISNULL(r.Losses, 0) AS Losses,
+                   ISNULL(r.Rank, 0)   AS Rank
+            FROM Team t
+            JOIN Tournament tour ON t.TournamentID = tour.TournamentID
+            LEFT JOIN Account a ON t.ManagerAccountID = a.AccountID
+            LEFT JOIN Ranking r ON r.TeamID = t.TeamID AND r.TournamentID = t.TournamentID";
+
         public List<Team> GetByTournament(int tournamentId)
         {
-            const string sql = @"
-                SELECT t.TeamID, t.TournamentID, t.TeamName, t.Description,
-                       t.ManagerAccountID, t.CreatedAt, t.ShortName, t.LogoColor, t.GameType, t.IsActive,
-                       tour.TournamentName,
-                       COALESCE(a.FullName, '') AS ManagerName,
-                       (SELECT COUNT(*) FROM Player WHERE TeamID = t.TeamID) AS PlayerCount,
-                       ISNULL(r.Wins, 0)   AS Wins,
-                       ISNULL(r.Losses, 0) AS Losses,
-                       ISNULL(r.Rank, 0)   AS Rank
-                FROM Team t
-                JOIN Tournament tour ON t.TournamentID = tour.TournamentID
-                LEFT JOIN Account a ON t.ManagerAccountID = a.AccountID
-                LEFT JOIN Ranking r ON r.TeamID = t.TeamID AND r.TournamentID = t.TournamentID
-                WHERE t.TournamentID = @id
-                ORDER BY t.TeamName;";
+            string sql = SELECT_BASE + " WHERE t.TournamentID = @id ORDER BY t.TeamName;";
             return MapList(DBHelper.ExecuteDataTable(sql, CommandType.Text,
                 new SqlParameter("@id", tournamentId)));
         }
 
         public List<Team> GetAll()
         {
-            const string sql = @"
-                SELECT t.*, tour.TournamentName,
-                       COALESCE(a.FullName, '') AS ManagerName,
-                       (SELECT COUNT(*) FROM Player WHERE TeamID = t.TeamID) AS PlayerCount,
-                       ISNULL(r.Wins, 0)   AS Wins,
-                       ISNULL(r.Losses, 0) AS Losses,
-                       ISNULL(r.Rank, 0)   AS Rank
-                FROM Team t
-                JOIN Tournament tour ON t.TournamentID = tour.TournamentID
-                LEFT JOIN Account a ON t.ManagerAccountID = a.AccountID
-                LEFT JOIN Ranking r ON r.TeamID = t.TeamID AND r.TournamentID = t.TournamentID
-                ORDER BY tour.TournamentName, t.TeamName;";
+            string sql = SELECT_BASE + " ORDER BY tour.TournamentName, t.TeamName;";
             return MapList(DBHelper.ExecuteDataTable(sql, CommandType.Text));
         }
 
         public List<Team> GetByManager(int managerAccountId)
         {
-            const string sql = @"
-                SELECT t.*, tour.TournamentName,
-                       COALESCE(a.FullName, '') AS ManagerName,
-                       (SELECT COUNT(*) FROM Player WHERE TeamID = t.TeamID) AS PlayerCount,
-                       ISNULL(r.Wins, 0)   AS Wins,
-                       ISNULL(r.Losses, 0) AS Losses,
-                       ISNULL(r.Rank, 0)   AS Rank
-                FROM Team t
-                JOIN Tournament tour ON t.TournamentID = tour.TournamentID
-                LEFT JOIN Account a ON t.ManagerAccountID = a.AccountID
-                LEFT JOIN Ranking r ON r.TeamID = t.TeamID AND r.TournamentID = t.TournamentID
-                WHERE t.ManagerAccountID = @id
-                ORDER BY tour.TournamentName, t.TeamName;";
+            string sql = SELECT_BASE + " WHERE t.ManagerAccountID = @id ORDER BY tour.TournamentName, t.TeamName;";
             return MapList(DBHelper.ExecuteDataTable(sql, CommandType.Text,
                 new SqlParameter("@id", managerAccountId)));
         }
 
         public Team GetByID(int id)
         {
-            const string sql = @"
-                SELECT t.*, tour.TournamentName,
-                       COALESCE(a.FullName, '') AS ManagerName,
-                       (SELECT COUNT(*) FROM Player WHERE TeamID = t.TeamID) AS PlayerCount,
-                       ISNULL(r.Wins, 0)   AS Wins,
-                       ISNULL(r.Losses, 0) AS Losses,
-                       ISNULL(r.Rank, 0)   AS Rank
-                FROM Team t
-                JOIN Tournament tour ON t.TournamentID = tour.TournamentID
-                LEFT JOIN Account a ON t.ManagerAccountID = a.AccountID
-                LEFT JOIN Ranking r ON r.TeamID = t.TeamID AND r.TournamentID = t.TournamentID
-                WHERE t.TeamID = @id;";
-            var dt = DBHelper.ExecuteDataTable(sql, CommandType.Text,
-                new SqlParameter("@id", id));
+            string sql = SELECT_BASE + " WHERE t.TeamID = @id;";
+            var dt = DBHelper.ExecuteDataTable(sql, CommandType.Text, new SqlParameter("@id", id));
             return dt.Rows.Count > 0 ? MapRow(dt.Rows[0]) : null;
         }
 
         public int Insert(Team t)
         {
             const string sql = @"
-                INSERT INTO Team (TournamentID, TeamName, Description, ManagerAccountID,
+                INSERT INTO Team (TournamentID, TeamName, Description, ManagerAccountID, ManagerName,
                                   ShortName, LogoColor, GameType, IsActive)
-                VALUES (@tid, @n, @d, @m, @sn, @lc, @gt, @ia);
+                VALUES (@tid, @n, @d, @m, @mn, @sn, @lc, @gt, @ia);
                 SELECT CAST(SCOPE_IDENTITY() AS INT);";
             return (int)DBHelper.ExecuteScalar(sql, CommandType.Text,
                 new SqlParameter("@tid", t.TournamentID),
                 new SqlParameter("@n",   t.TeamName),
                 new SqlParameter("@d",   (object)t.Description ?? DBNull.Value),
                 new SqlParameter("@m",   (object)t.ManagerAccountID ?? DBNull.Value),
+                new SqlParameter("@mn",  (object)t.ManagerName ?? DBNull.Value),
                 new SqlParameter("@sn",  (object)t.ShortName ?? DBNull.Value),
                 new SqlParameter("@lc",  (object)(t.LogoColor ?? "#3b82f6")),
                 new SqlParameter("@gt",  (object)t.GameType ?? DBNull.Value),
@@ -105,13 +69,14 @@ namespace EsportManagement.DAL
         public int Update(Team t)
         {
             const string sql = @"
-                UPDATE Team SET TeamName=@n, Description=@d, ManagerAccountID=@m,
+                UPDATE Team SET TeamName=@n, Description=@d, ManagerAccountID=@m, ManagerName=@mn,
                        ShortName=@sn, LogoColor=@lc, GameType=@gt, IsActive=@ia
                 WHERE TeamID=@id;";
             return DBHelper.ExecuteNonQuery(sql, CommandType.Text,
                 new SqlParameter("@n",   t.TeamName),
                 new SqlParameter("@d",   (object)t.Description ?? DBNull.Value),
                 new SqlParameter("@m",   (object)t.ManagerAccountID ?? DBNull.Value),
+                new SqlParameter("@mn",  (object)t.ManagerName ?? DBNull.Value),
                 new SqlParameter("@sn",  (object)t.ShortName ?? DBNull.Value),
                 new SqlParameter("@lc",  (object)(t.LogoColor ?? "#3b82f6")),
                 new SqlParameter("@gt",  (object)t.GameType ?? DBNull.Value),
@@ -143,6 +108,20 @@ namespace EsportManagement.DAL
                 new SqlParameter("@excl", (object)excludeTeamId ?? DBNull.Value)) > 0;
         }
 
+        /// <summary>
+        /// Lấy các đội (theo Manager) có cùng GameType - dùng cho đăng ký giải khác.
+        /// </summary>
+        public List<Team> GetMyTeamsByGame(int managerAccountId, string gameType)
+        {
+            string sql = SELECT_BASE + @"
+                WHERE t.ManagerAccountID = @id
+                  AND (@gt IS NULL OR t.GameType = @gt)
+                ORDER BY t.TeamName;";
+            return MapList(DBHelper.ExecuteDataTable(sql, CommandType.Text,
+                new SqlParameter("@id", managerAccountId),
+                new SqlParameter("@gt", string.IsNullOrEmpty(gameType) ? (object)DBNull.Value : gameType)));
+        }
+
         private static List<Team> MapList(DataTable dt)
         {
             var list = new List<Team>();
@@ -159,13 +138,16 @@ namespace EsportManagement.DAL
                 TeamName         = r["TeamName"].ToString(),
                 Description      = r["Description"] == DBNull.Value ? null : r["Description"].ToString(),
                 ManagerAccountID = r["ManagerAccountID"] == DBNull.Value ? (int?)null : (int)r["ManagerAccountID"],
+                ManagerName      = r.Table.Columns.Contains("DisplayManagerName") && r["DisplayManagerName"] != DBNull.Value
+                                    ? r["DisplayManagerName"].ToString()
+                                    : (r.Table.Columns.Contains("ManagerName") && r["ManagerName"] != DBNull.Value
+                                        ? r["ManagerName"].ToString() : ""),
                 CreatedAt        = (DateTime)r["CreatedAt"],
                 ShortName        = r.Table.Columns.Contains("ShortName") && r["ShortName"] != DBNull.Value ? r["ShortName"].ToString() : "",
                 LogoColor        = r.Table.Columns.Contains("LogoColor") && r["LogoColor"] != DBNull.Value ? r["LogoColor"].ToString() : "#3b82f6",
                 GameType         = r.Table.Columns.Contains("GameType")  && r["GameType"]  != DBNull.Value ? r["GameType"].ToString()  : "",
                 IsActive         = r.Table.Columns.Contains("IsActive")  ? (bool)r["IsActive"] : true,
                 TournamentName   = r.Table.Columns.Contains("TournamentName") ? r["TournamentName"].ToString() : null,
-                ManagerName      = r.Table.Columns.Contains("ManagerName")    ? r["ManagerName"].ToString()    : null,
                 PlayerCount      = r.Table.Columns.Contains("PlayerCount")    ? (int)r["PlayerCount"]          : 0,
                 Wins             = r.Table.Columns.Contains("Wins")           ? (int)r["Wins"]                 : 0,
                 Losses           = r.Table.Columns.Contains("Losses")         ? (int)r["Losses"]               : 0,
