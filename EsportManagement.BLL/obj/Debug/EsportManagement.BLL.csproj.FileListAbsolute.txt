@@ -1,0 +1,11 @@
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.BLL\bin\Debug\EsportManagement.BLL.dll
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.BLL\bin\Debug\EsportManagement.BLL.pdb
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.BLL\bin\Debug\EsportManagement.DAL.dll
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.BLL\bin\Debug\EsportManagement.DTO.dll
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.BLL\bin\Debug\EsportManagement.DTO.pdb
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.BLL\bin\Debug\EsportManagement.DAL.pdb
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.BLL\obj\Debug\EsportManagement.BLL.csproj.AssemblyReference.cache
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.BLL\obj\Debug\EsportManagement.BLL.csproj.CoreCompileInputs.cache
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.BLL\obj\Debug\EsportMa.5F2EA7EA.Up2Date
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.BLL\obj\Debug\EsportManagement.BLL.dll
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.BLL\obj\Debug\EsportManagement.BLL.pdb

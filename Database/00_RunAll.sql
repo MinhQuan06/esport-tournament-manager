@@ -1,0 +1,7 @@
+-- Chạy theo thứ tự (mở SQL Server Management Studio, kết nối, paste lần lượt):
+--   1. 01_CreateDatabase.sql   (tạo DB + tables + roles mặc định)
+--   2. 02_Functions.sql         (các function dùng cho ranking)
+--   3. 03_StoredProcedures.sql  (SP_RecalcRanking, SP_EnterMatchResult...)
+--   4. 04_Triggers.sql          (giới hạn 10 player, auto recalc BXH)
+--   5. 05_SeedData.sql          (dữ liệu mẫu + tài khoản test)
+--   6. 06_SchemaUpdate.sql     (BỔ SUNG cột mới: GameType, Nickname, Position...)

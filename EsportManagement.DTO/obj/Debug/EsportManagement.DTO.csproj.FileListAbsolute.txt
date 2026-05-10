@@ -1,0 +1,6 @@
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.DTO\bin\Debug\EsportManagement.DTO.dll
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.DTO\bin\Debug\EsportManagement.DTO.pdb
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.DTO\obj\Debug\EsportManagement.DTO.csproj.AssemblyReference.cache
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.DTO\obj\Debug\EsportManagement.DTO.csproj.CoreCompileInputs.cache
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.DTO\obj\Debug\EsportManagement.DTO.dll
+C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.DTO\obj\Debug\EsportManagement.DTO.pdb

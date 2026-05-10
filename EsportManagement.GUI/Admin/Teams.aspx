@@ -1,0 +1,154 @@
+﻿<%@ Page Title="Quản lý đội thi đấu" Language="C#" MasterPageFile="~/Site.Master"
+    AutoEventWireup="true" CodeFile="Teams.aspx.cs" Inherits="Admin_Teams" %>
+<asp:Content ContentPlaceHolderID="MainContent" runat="server">
+<div class="page-header">
+    <h1 class="page-title">Quản lý đội thi đấu</h1>
+    <div class="page-actions">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mdl">
+            <i class="bi bi-plus-lg"></i> Thêm đội mới
+        </button>
+    </div>
+</div>
+
+<asp:Label ID="lblMsg" runat="server" Visible="false" />
+
+<div class="es-card mb-3">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <asp:TextBox ID="txtKw" runat="server" CssClass="form-control" placeholder="🔍 Tìm kiếm đội..." />
+        </div>
+        <div class="col-md-3">
+            <asp:DropDownList ID="ddlGameFilter" runat="server" CssClass="form-select">
+                <asp:ListItem Value="" Text="Tất cả game" />
+                <asp:ListItem Value="League of Legends" />
+                <asp:ListItem Value="CS:GO" />
+                <asp:ListItem Value="Valorant" />
+                <asp:ListItem Value="Dota 2" />
+            </asp:DropDownList>
+        </div>
+        <div class="col-md-3">
+            <asp:DropDownList ID="ddlTour" runat="server" CssClass="form-select"
+                AutoPostBack="true" OnSelectedIndexChanged="ddlTour_Changed"
+                DataValueField="TournamentID" DataTextField="TournamentName"
+                AppendDataBoundItems="true">
+                <asp:ListItem Value="0" Text="Tất cả giải đấu" />
+            </asp:DropDownList>
+        </div>
+    </div>
+</div>
+
+<asp:Repeater ID="rpt" runat="server" OnItemCommand="rpt_ItemCommand">
+    <HeaderTemplate><div class="row g-3"></HeaderTemplate>
+    <ItemTemplate>
+        <div class="col-md-4 col-lg-4">
+            <div class="team-card">
+                <div class="team-card-header">
+                    <div class="team-avatar lg" style="background:<%# Eval("LogoColor") %>;">
+                        <%# Eval("ShortName") %>
+                    </div>
+                    <div class="team-card-title">
+                        <h5><%# Eval("TeamName") %></h5>
+                        <div class="game"><%# Eval("GameType") %></div>
+                    </div>
+                    <span class="es-badge <%# (bool)Eval("IsActive") ? "badge-active" : "badge-finished" %>">
+                        <%# (bool)Eval("IsActive") ? "ACTIVE" : "INACTIVE" %>
+                    </span>
+                </div>
+                <div class="team-stats">
+                    <div class="team-stat"><div class="value cyan"><%# Eval("PlayerCount") %></div><div class="label">NGƯỜI CHƠI</div></div>
+                    <div class="team-stat"><div class="value green"><%# Eval("Wins") %></div><div class="label">TRẬN THẮNG</div></div>
+                    <div class="team-stat"><div class="value red"><%# Eval("Losses") %></div><div class="label">TRẬN THUA</div></div>
+                    <div class="team-stat"><div class="value">#<%# Eval("Rank") %></div><div class="label">XẾP HẠNG</div></div>
+                </div>
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">
+                    <i class="bi bi-trophy"></i> <%# Eval("TournamentName") %>
+                    <%# string.IsNullOrEmpty(Eval("ManagerName").ToString()) ? "" : " · 👤 " + Eval("ManagerName") %>
+                </div>
+                <div class="team-actions">
+                    <a class="btn btn-secondary btn-sm" href='<%# ResolveUrl("~/Admin/Players.aspx?team=" + Eval("TeamID")) %>'>
+                        <i class="bi bi-eye"></i> Xem
+                    </a>
+                    <asp:LinkButton runat="server" CssClass="btn btn-secondary btn-sm"
+                        CommandName="EditItem" CommandArgument='<%# Eval("TeamID") %>'>
+                        <i class="bi bi-pencil"></i> Sửa</asp:LinkButton>
+                    <asp:LinkButton runat="server" CssClass="btn btn-danger btn-sm"
+                        CommandName="DeleteItem" CommandArgument='<%# Eval("TeamID") %>'
+                        OnClientClick="return confirm('Xóa đội này?');">
+                        <i class="bi bi-trash"></i> Xóa</asp:LinkButton>
+                </div>
+            </div>
+        </div>
+    </ItemTemplate>
+    <FooterTemplate></div></FooterTemplate>
+</asp:Repeater>
+
+<div class="modal fade" id="mdl" tabindex="-1">
+  <div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title"><asp:Literal ID="litTitle" runat="server" Text="Thêm đội mới" /></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <asp:HiddenField ID="hfId" runat="server" />
+        <div class="row">
+            <div class="col-md-8 mb-3">
+                <label class="form-label">Tên đội *</label>
+                <asp:TextBox ID="txtName" runat="server" CssClass="form-control" />
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Tên ngắn</label>
+                <asp:TextBox ID="txtShort" runat="server" CssClass="form-control" placeholder="T1, GAM..." MaxLength="10" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Giải đấu *</label>
+                <asp:DropDownList ID="ddlTourEdit" runat="server" CssClass="form-select"
+                    DataValueField="TournamentID" DataTextField="TournamentName" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Game</label>
+                <asp:DropDownList ID="ddlGameEdit" runat="server" CssClass="form-select">
+                    <asp:ListItem Value="League of Legends" />
+                    <asp:ListItem Value="CS:GO" />
+                    <asp:ListItem Value="Valorant" />
+                    <asp:ListItem Value="Dota 2" />
+                </asp:DropDownList>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Quản lý đội</label>
+                <asp:DropDownList ID="ddlManager" runat="server" CssClass="form-select"
+                    DataValueField="AccountID" DataTextField="FullName" AppendDataBoundItems="true">
+                    <asp:ListItem Value="" Text="-- Không gán --" />
+                </asp:DropDownList>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Màu logo</label>
+                <asp:DropDownList ID="ddlColor" runat="server" CssClass="form-select">
+                    <asp:ListItem Value="#3b82f6" Text="Xanh dương" />
+                    <asp:ListItem Value="#ef4444" Text="Đỏ" />
+                    <asp:ListItem Value="#10b981" Text="Xanh lá" />
+                    <asp:ListItem Value="#f59e0b" Text="Cam" />
+                    <asp:ListItem Value="#8b5cf6" Text="Tím" />
+                    <asp:ListItem Value="#06b6d4" Text="Cyan" />
+                    <asp:ListItem Value="#ec4899" Text="Hồng" />
+                </asp:DropDownList>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Mô tả</label>
+            <asp:TextBox ID="txtDesc" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="2" />
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <asp:Button ID="btnSave" runat="server" Text="Lưu đội" CssClass="btn btn-primary" OnClick="btnSave_Click" />
+    </div>
+  </div></div>
+</div>
+<% if (ShowModal) { %>
+<script>document.addEventListener('DOMContentLoaded',function(){new bootstrap.Modal(document.getElementById('mdl')).show();});</script>
+<% } %>
+</asp:Content>
