@@ -7,3 +7,10 @@ C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\Espo
 C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.DAL\obj\Debug\EsportMa.1D5B32B9.Up2Date
 C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.DAL\obj\Debug\EsportManagement.DAL.dll
 C:\Users\mikun\OneDrive\Tài liệu\Claude\Projects\cnpm\EsportManagement\EsportManagement.DAL\obj\Debug\EsportManagement.DAL.pdb
+C:\Users\Tran Huu Long\OneDrive\ドキュメント\Learning\CNPM\esport-tournament-manager\EsportManagement.DAL\obj\Debug\EsportManagement.DAL.dll
+C:\Users\Tran Huu Long\OneDrive\ドキュメント\Learning\CNPM\esport-tournament-manager\EsportManagement.DAL\obj\Debug\EsportManagement.DAL.pdb
+C:\Users\Tran Huu Long\OneDrive\ドキュメント\Learning\CNPM\esport-tournament-manager\EsportManagement.DAL\obj\Debug\EsportManagement.DAL.csprojResolveAssemblyReference.cache
+C:\Users\Tran Huu Long\OneDrive\ドキュメント\Learning\CNPM\esport-tournament-manager\EsportManagement.DAL\bin\Debug\EsportManagement.DAL.dll
+C:\Users\Tran Huu Long\OneDrive\ドキュメント\Learning\CNPM\esport-tournament-manager\EsportManagement.DAL\bin\Debug\EsportManagement.DAL.pdb
+C:\Users\Tran Huu Long\OneDrive\ドキュメント\Learning\CNPM\esport-tournament-manager\EsportManagement.DAL\bin\Debug\EsportManagement.DTO.dll
+C:\Users\Tran Huu Long\OneDrive\ドキュメント\Learning\CNPM\esport-tournament-manager\EsportManagement.DAL\bin\Debug\EsportManagement.DTO.pdb
