@@ -20,6 +20,13 @@ public partial class Public_Ranking : Page
             int id;
             if (int.TryParse(Request.QueryString["id"], out id))
                 try { ddlTour.SelectedValue = id.ToString(); } catch { }
+            else
+            {
+                var defaultTournament = tours.FirstOrDefault(t => t.Status == TournamentStatus.DangDienRa)
+                    ?? tours.FirstOrDefault();
+                if (defaultTournament != null)
+                    ddlTour.SelectedValue = defaultTournament.TournamentID.ToString();
+            }
         }
         Bind();
     }

@@ -9,9 +9,44 @@ namespace EsportManagement.BLL
     {
         private readonly RoleDAL _dal = new RoleDAL();
 
-        public List<Role> GetAll() => _dal.GetAll();
-        public Role GetByID(int id) => _dal.GetByID(id);
-        public Role GetByName(string name) => _dal.GetByName(name);
+        public List<Role> GetAll()
+        {
+            try
+            {
+                return _dal.GetAll();
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.Roles();
+                throw;
+            }
+        }
+
+        public Role GetByID(int id)
+        {
+            try
+            {
+                return _dal.GetByID(id);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.RoleById(id);
+                throw;
+            }
+        }
+
+        public Role GetByName(string name)
+        {
+            try
+            {
+                return _dal.GetByName(name);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.RoleByName(name);
+                throw;
+            }
+        }
 
         public int Create(Role role)
         {

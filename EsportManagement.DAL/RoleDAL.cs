@@ -64,11 +64,14 @@ namespace EsportManagement.DAL
                 new SqlParameter("@id", id));
         }
 
-        private static Role MapRow(DataRow r) => new Role
+        private static Role MapRow(DataRow r)
         {
-            RoleID      = (int)r["RoleID"],
-            RoleName    = r["RoleName"].ToString(),
-            Description = r["Description"] == System.DBNull.Value ? null : r["Description"].ToString()
-        };
+            return new Role
+            {
+                RoleID      = (int)r["RoleID"],
+                RoleName    = r["RoleName"].ToString(),
+                Description = r["Description"] == System.DBNull.Value ? null : r["Description"].ToString()
+            };
+        }
     }
 }

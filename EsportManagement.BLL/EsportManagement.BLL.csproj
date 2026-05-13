@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PasswordHasher.cs" />
+    <Compile Include="DemoData.cs" />
     <Compile Include="AccountBLL.cs" />
     <Compile Include="RoleBLL.cs" />
     <Compile Include="TournamentBLL.cs" />

@@ -10,14 +10,70 @@ namespace EsportManagement.BLL
         private readonly TeamDAL _dal = new TeamDAL();
         private readonly TournamentDAL _tourDal = new TournamentDAL();
 
-        public List<Team> GetAll() { return _dal.GetAll(); }
-        public List<Team> GetByTournament(int tournamentId) { return _dal.GetByTournament(tournamentId); }
-        public List<Team> GetByManager(int managerAccountId) { return _dal.GetByManager(managerAccountId); }
+        public List<Team> GetAll()
+        {
+            try
+            {
+                return _dal.GetAll();
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.Teams();
+                throw;
+            }
+        }
+
+        public List<Team> GetByTournament(int tournamentId)
+        {
+            try
+            {
+                return _dal.GetByTournament(tournamentId);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.TeamsByTournament(tournamentId);
+                throw;
+            }
+        }
+
+        public List<Team> GetByManager(int managerAccountId)
+        {
+            try
+            {
+                return _dal.GetByManager(managerAccountId);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.TeamsByManager(managerAccountId);
+                throw;
+            }
+        }
+
         public List<Team> GetMyTeamsByGame(int managerAccountId, string gameType)
         {
-            return _dal.GetMyTeamsByGame(managerAccountId, gameType);
+            try
+            {
+                return _dal.GetMyTeamsByGame(managerAccountId, gameType);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.MyTeamsByGame(managerAccountId, gameType);
+                throw;
+            }
         }
-        public Team GetByID(int id) { return _dal.GetByID(id); }
+
+        public Team GetByID(int id)
+        {
+            try
+            {
+                return _dal.GetByID(id);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.TeamById(id);
+                throw;
+            }
+        }
 
         public int Create(Team t)
         {

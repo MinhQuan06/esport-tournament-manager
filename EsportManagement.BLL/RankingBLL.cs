@@ -8,7 +8,22 @@ namespace EsportManagement.BLL
     {
         private readonly RankingDAL _dal = new RankingDAL();
 
-        public List<Ranking> GetByTournament(int tournamentId) => _dal.GetByTournament(tournamentId);
-        public void Recalculate(int tournamentId) => _dal.Recalculate(tournamentId);
+        public List<Ranking> GetByTournament(int tournamentId)
+        {
+            try
+            {
+                return _dal.GetByTournament(tournamentId);
+            }
+            catch (System.Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.RankingsByTournament(tournamentId);
+                throw;
+            }
+        }
+
+        public void Recalculate(int tournamentId)
+        {
+            _dal.Recalculate(tournamentId);
+        }
     }
 }

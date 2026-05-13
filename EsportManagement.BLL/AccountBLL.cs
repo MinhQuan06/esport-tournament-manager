@@ -12,10 +12,46 @@ namespace EsportManagement.BLL
 
         public Account Login(string username, string password)
         {
+            throw new ArgumentException("Vui long chon vai tro Admin hoac Team Manager.");
+        }
+
+        public Account Login(string username, string password, string requiredRole)
+        {
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-                throw new ArgumentException("Username và mật khẩu không được trống.");
+                throw new ArgumentException("Username va mat khau khong duoc trong.");
+
+            var loginRole = NormalizeLoginRole(requiredRole);
             var hash = PasswordHasher.Hash(password);
-            return _dal.Login(username.Trim(), hash);
+            try
+            {
+                var acc = _dal.Login(username.Trim(), hash);
+                if (acc == null) return null;
+                if (loginRole != null && !acc.HasRole(loginRole)) return null;
+                return acc;
+            }
+            catch (Exception ex)
+            {
+                if (!DemoData.IsDatabaseUnavailable(ex)) throw;
+
+                var acc = DemoData.Login(username.Trim(), hash);
+                if (acc == null) return null;
+                if (loginRole != null && !acc.HasRole(loginRole)) return null;
+                return acc;
+            }
+        }
+
+        private static string NormalizeLoginRole(string role)
+        {
+            if (string.IsNullOrWhiteSpace(role)) return null;
+            role = role.Trim();
+            if (string.Equals(role, "Admin", StringComparison.OrdinalIgnoreCase))
+                return "Admin";
+            if (string.Equals(role, "TeamManager", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(role, "Team Manager", StringComparison.OrdinalIgnoreCase))
+                return "TeamManager";
+            if (string.Equals(role, "Viewer", StringComparison.OrdinalIgnoreCase))
+                return "Viewer";
+            throw new ArgumentException("Vai tro dang nhap khong hop le.");
         }
 
         public Account Register(string username, string password, string email, string fullName)
@@ -51,11 +87,36 @@ namespace EsportManagement.BLL
             return acc;
         }
 
-        public List<Account> GetAll() => _dal.GetAll();
+        public List<Account> GetAll()
+        {
+            try
+            {
+                return _dal.GetAll();
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.Accounts();
+                throw;
+            }
+        }
 
-        public Account GetByID(int id) => _dal.GetByID(id);
+        public Account GetByID(int id)
+        {
+            try
+            {
+                return _dal.GetByID(id);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.AccountById(id);
+                throw;
+            }
+        }
 
-        public void Update(Account acc) => _dal.Update(acc);
+        public void Update(Account acc)
+        {
+            _dal.Update(acc);
+        }
 
         public void ChangePassword(int accountId, string oldPassword, string newPassword)
         {
@@ -75,9 +136,19 @@ namespace EsportManagement.BLL
             _dal.UpdatePassword(accountId, PasswordHasher.Hash(newPassword));
         }
 
-        public void Delete(int id) => _dal.Delete(id);
+        public void Delete(int id)
+        {
+            _dal.Delete(id);
+        }
 
-        public void AssignRole(int accountId, int roleId) => _dal.AssignRole(accountId, roleId);
-        public void RemoveRole(int accountId, int roleId) => _dal.RemoveRole(accountId, roleId);
+        public void AssignRole(int accountId, int roleId)
+        {
+            _dal.AssignRole(accountId, roleId);
+        }
+
+        public void RemoveRole(int accountId, int roleId)
+        {
+            _dal.RemoveRole(accountId, roleId);
+        }
     }
 }

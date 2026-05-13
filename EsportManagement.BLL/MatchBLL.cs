@@ -9,8 +9,44 @@ namespace EsportManagement.BLL
     {
         private readonly MatchDAL _dal = new MatchDAL();
 
-        public List<Match> GetByTournament(int tournamentId) => _dal.GetByTournament(tournamentId);
-        public Match GetByID(int id) => _dal.GetByID(id);
+        public List<Match> GetByTournament(int tournamentId)
+        {
+            try
+            {
+                return _dal.GetByTournament(tournamentId);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.MatchesByTournament(tournamentId);
+                throw;
+            }
+        }
+
+        public Match GetByID(int id)
+        {
+            try
+            {
+                return _dal.GetByID(id);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.MatchById(id);
+                throw;
+            }
+        }
+
+        public List<Match> GetUpcoming(int days)
+        {
+            try
+            {
+                return _dal.GetUpcoming(days);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.UpcomingMatches(days);
+                throw;
+            }
+        }
 
         public int Create(Match m)
         {
@@ -32,7 +68,10 @@ namespace EsportManagement.BLL
             _dal.Update(m);
         }
 
-        public void UpdateStatus(int matchId, MatchStatus status) => _dal.UpdateStatus(matchId, status);
+        public void UpdateStatus(int matchId, MatchStatus status)
+        {
+            _dal.UpdateStatus(matchId, status);
+        }
 
         public void Delete(int id)
         {
@@ -44,7 +83,7 @@ namespace EsportManagement.BLL
 
         private static void Validate(Match m)
         {
-            if (m == null) throw new ArgumentNullException(nameof(m));
+            if (m == null) throw new ArgumentNullException("m");
             if (m.Team1ID == m.Team2ID)
                 throw new ArgumentException("Hai đội thi đấu phải khác nhau. (FR-MATCH-06)");
             if (m.Team1ID <= 0 || m.Team2ID <= 0)

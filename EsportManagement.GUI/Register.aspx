@@ -7,8 +7,8 @@
         <span class="corner-bl"></span><span class="corner-br"></span>
         <div class="login-logo">
             <div class="login-icon-circle"><i class="bi bi-person-plus"></i></div>
-            <h1 class="login-title">ĐĂNG KÝ</h1>
-            <div class="login-subtitle">TẠO TÀI KHOẢN MỚI</div>
+            <h1 class="login-title">ĐĂNG KÝ <span class="brand-accent">VIEWER</span></h1>
+            <div class="login-subtitle">TẠO TÀI KHOẢN XEM GIẢI ĐẤU</div>
         </div>
         <asp:Label ID="lblMessage" runat="server" Visible="false" />
         <div class="mb-3"><label class="form-label">Họ và tên</label>

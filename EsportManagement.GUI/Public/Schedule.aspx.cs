@@ -37,8 +37,7 @@ public partial class Public_Schedule : Page
     {
         litMonth.Text = "Tháng " + CurrentMonth.Month + ", " + CurrentMonth.Year;
 
-        var dal = new EsportManagement.DAL.MatchDAL();
-        var allMatches = dal.GetUpcoming(120);
+        var allMatches = new MatchBLL().GetUpcoming(120);
         int tid;
         if (int.TryParse(ddlTour.SelectedValue, out tid) && tid > 0)
             allMatches = allMatches.Where(m => m.TournamentID == tid).ToList();

@@ -9,11 +9,43 @@ namespace EsportManagement.BLL
     {
         private readonly TournamentDAL _dal = new TournamentDAL();
 
-        public List<Tournament> GetAll() { return _dal.GetAll(); }
-        public Tournament GetByID(int id) { return _dal.GetByID(id); }
+        public List<Tournament> GetAll()
+        {
+            try
+            {
+                return _dal.GetAll();
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.Tournaments();
+                throw;
+            }
+        }
+
+        public Tournament GetByID(int id)
+        {
+            try
+            {
+                return _dal.GetByID(id);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.TournamentById(id);
+                throw;
+            }
+        }
+
         public List<Tournament> Search(string keyword, string status, string gameType)
         {
-            return _dal.Search(keyword, status, gameType);
+            try
+            {
+                return _dal.Search(keyword, status, gameType);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.SearchTournaments(keyword, status, gameType);
+                throw;
+            }
         }
 
         public int Create(Tournament t)

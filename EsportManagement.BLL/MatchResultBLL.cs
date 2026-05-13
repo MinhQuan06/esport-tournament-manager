@@ -8,7 +8,10 @@ namespace EsportManagement.BLL
     {
         private readonly MatchResultDAL _dal = new MatchResultDAL();
 
-        public MatchResult GetByMatch(int matchId) => _dal.GetByMatch(matchId);
+        public MatchResult GetByMatch(int matchId)
+        {
+            return _dal.GetByMatch(matchId);
+        }
 
         public void EnterResult(int matchId, int score1, int score2)
         {

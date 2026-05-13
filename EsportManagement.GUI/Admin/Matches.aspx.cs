@@ -17,8 +17,14 @@ public partial class Admin_Matches : Page
         AuthHelper.RequireAdmin();
         if (!IsPostBack)
         {
-            ddlTour.DataSource = _tourBll.GetAll();
+            var tournaments = _tourBll.GetAll();
+            ddlTour.DataSource = tournaments;
             ddlTour.DataBind();
+            var defaultTournament = tournaments.FirstOrDefault(t => t.Status == TournamentStatus.DangDienRa)
+                ?? tournaments.FirstOrDefault();
+            if (defaultTournament != null)
+                ddlTour.SelectedValue = defaultTournament.TournamentID.ToString();
+            BindTeamsForTour();
             BindList();
         }
     }

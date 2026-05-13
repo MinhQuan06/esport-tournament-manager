@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using EsportManagement.BLL;
+using EsportManagement.DTO;
 
 public partial class Admin_Results : Page
 {
@@ -21,9 +22,10 @@ public partial class Admin_Results : Page
         Team1Short = Team2Short = ""; Team1Color = "#3b82f6"; Team2Color = "#ef4444";
         if (!IsPostBack)
         {
-            ddlTour.DataSource = _tourBll.GetAll();
+            var tournaments = _tourBll.GetAll();
+            ddlTour.DataSource = tournaments;
             ddlTour.DataBind();
-            ddlTour.Items.Insert(0, new ListItem("-- Chọn giải --", "0"));
+            ddlTour.Items.Insert(0, new ListItem("-- Ch?n gi?i --", "0"));
             int matchId;
             if (int.TryParse(Request.QueryString["match"], out matchId))
             {
@@ -33,6 +35,16 @@ public partial class Admin_Results : Page
                     ddlTour.SelectedValue = m.TournamentID.ToString();
                     LoadMatches();
                     ddlMatch.SelectedValue = matchId.ToString();
+                }
+            }
+            else
+            {
+                var defaultTournament = tournaments.FirstOrDefault(t => t.Status == TournamentStatus.DangDienRa)
+                    ?? tournaments.FirstOrDefault();
+                if (defaultTournament != null)
+                {
+                    ddlTour.SelectedValue = defaultTournament.TournamentID.ToString();
+                    LoadMatches();
                 }
             }
         }

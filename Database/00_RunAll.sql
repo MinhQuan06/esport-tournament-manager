@@ -5,3 +5,5 @@
 --   4. 04_Triggers.sql          (giới hạn 10 player, auto recalc BXH)
 --   5. 05_SeedData.sql          (dữ liệu mẫu + tài khoản test)
 --   6. 06_SchemaUpdate.sql     (BỔ SUNG cột mới: GameType, Nickname, Position...)
+--   7. 07_AddManagerName.sql    (b? sung t?n qu?n l? ??i)
+--   8. 08_DemoVideoSeed.sql     (d? li?u th?t, ??y ?? ?? quay video demo)

@@ -4,18 +4,33 @@ using EsportManagement.BLL;
 
 public partial class Register : Page
 {
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+            Show("Dang ky truc tiep chi tao tai khoan Viewer.", true);
+    }
+
     protected void btnRegister_Click(object sender, EventArgs e)
     {
-        if (txtPassword.Text != txtConfirm.Text) { Show("Mật khẩu nhập lại không khớp.", false); return; }
+        if (txtPassword.Text != txtConfirm.Text)
+        {
+            Show("Mat khau nhap lai khong khop.", false);
+            return;
+        }
+
         try
         {
             var acc = new AccountBLL().Register(
                 txtUsername.Text, txtPassword.Text, txtEmail.Text, txtFullName.Text);
+
             Session["CurrentUser"] = acc;
-            Show("Đăng ký thành công! Đang chuyển...", true);
+            Show("Dang ky Viewer thanh cong! Dang chuyen ve Dashboard...", true);
             Response.AddHeader("REFRESH", "1.5;URL=Default.aspx");
         }
-        catch (Exception ex) { Show(ex.Message, false); }
+        catch (Exception ex)
+        {
+            Show(ex.Message, false);
+        }
     }
 
     private void Show(string msg, bool success)

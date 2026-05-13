@@ -14,9 +14,16 @@ public partial class Login : Page
     {
         try
         {
-            var acc = new AccountBLL().Login(txtUsername.Text, txtPassword.Text);
-            if (acc == null) { ShowError("Tên đăng nhập hoặc mật khẩu không đúng."); return; }
-            if (acc.IsLocked) { ShowError("Tài khoản đã bị khóa."); return; }
+            var selectedRole = hfRole.Value;
+            if (string.IsNullOrWhiteSpace(selectedRole))
+            {
+                ShowError("Vui long chon vai tro Admin, Team Manager hoac Viewer.");
+                return;
+            }
+
+            var acc = new AccountBLL().Login(txtUsername.Text, txtPassword.Text, selectedRole);
+            if (acc == null) { ShowError("Ten dang nhap, mat khau hoac vai tro khong dung."); return; }
+            if (acc.IsLocked) { ShowError("Tai khoan da bi khoa."); return; }
             Session["CurrentUser"] = acc;
             Response.Redirect("~/Default.aspx");
         }

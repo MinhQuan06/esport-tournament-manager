@@ -20,7 +20,10 @@ namespace EsportManagement.DTO
 
         // Trường mở rộng (load qua SP_GetTournamentRanking)
         public string TeamName { get; set; }
-        public int Played => Wins + Losses + Draws;
+        public int Played
+        {
+            get { return Wins + Losses + Draws; }
+        }
         public int GoalDiff { get; set; }
     }
 }

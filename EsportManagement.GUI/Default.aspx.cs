@@ -33,10 +33,9 @@ public partial class DefaultPage : Page
         rptTours.DataSource = tours.Take(5).ToList();
         rptTours.DataBind();
 
-        var matches = new MatchBLL();
         try
         {
-            var upcoming = new EsportManagement.DAL.MatchDAL().GetUpcoming(7).Take(5).ToList();
+            var upcoming = new MatchBLL().GetUpcoming(7).Take(5).ToList();
             rptMatches.DataSource = upcoming;
             rptMatches.DataBind();
         }

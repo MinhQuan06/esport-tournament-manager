@@ -9,10 +9,57 @@ namespace EsportManagement.BLL
     {
         private readonly PlayerDAL _dal = new PlayerDAL();
 
-        public List<Player> GetByTeam(int teamId) { return _dal.GetByTeam(teamId); }
-        public List<Player> GetAll() { return _dal.GetAll(); }
-        public List<Player> Search(string keyword, int? teamId, string position) { return _dal.Search(keyword, teamId, position); }
-        public Player GetByID(int id) { return _dal.GetByID(id); }
+        public List<Player> GetByTeam(int teamId)
+        {
+            try
+            {
+                return _dal.GetByTeam(teamId);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.PlayersByTeam(teamId);
+                throw;
+            }
+        }
+
+        public List<Player> GetAll()
+        {
+            try
+            {
+                return _dal.GetAll();
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.Players();
+                throw;
+            }
+        }
+
+        public List<Player> Search(string keyword, int? teamId, string position)
+        {
+            try
+            {
+                return _dal.Search(keyword, teamId, position);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.SearchPlayers(keyword, teamId, position);
+                throw;
+            }
+        }
+
+        public Player GetByID(int id)
+        {
+            try
+            {
+                return _dal.GetByID(id);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.PlayerById(id);
+                throw;
+            }
+        }
 
         public int Add(Player p)
         {
@@ -29,7 +76,18 @@ namespace EsportManagement.BLL
 
         public void Update(Player p) { Validate(p); _dal.Update(p); }
         public void Remove(int id) { _dal.Delete(id); }
-        public int CountByTeam(int teamId) { return _dal.CountByTeam(teamId); }
+        public int CountByTeam(int teamId)
+        {
+            try
+            {
+                return _dal.CountByTeam(teamId);
+            }
+            catch (Exception ex)
+            {
+                if (DemoData.IsDatabaseUnavailable(ex)) return DemoData.PlayersByTeam(teamId).Count;
+                throw;
+            }
+        }
 
         private static void Validate(Player p)
         {
